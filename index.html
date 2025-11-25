@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pre-invitación | Citlali & Marcos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;600;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root{
+      --accent: #b99f4b;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    html,body{
+      height:100%;
+      font-family:Montserrat,system-ui,Arial;
+      overflow-x:hidden;
+    }
+
+    /* 🔥 NUEVO: Fondo compatible en CELULAR (sin fixed buggy) */
+    .bg-img{
+      position:fixed;
+      inset:0;
+      width:100%;height:100%;
+      background:url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjLgud9niXcTbcXZAJg4Jjiih8r5OonD-YSz0nSFXeW4nrfChxAsprnMS3Duh2TMBTkxVwGyGZahJmDMvlVpO4v6GAgG0Fy7gCNwVoZfN-i_VsD66mDWQl4jdukS9AdNHnl9VLiiiOn589T4wLdXwflAJd7PHmdbIfQzAWkD8P__BZPglAvXjG-bnRedlk/s6000/DSC02108.jpg') center/cover no-repeat;
+      z-index:-3;
+    }
+
+    /* 🔥 NUEVO: capa blanca correcta para ver la imagen en CELULAR */
+    .back-tint{
+      position:fixed;
+      inset:0;
+      background:rgba(255,255,255,0.45);
+      backdrop-filter: blur(2px);
+      z-index:-2;
+    }
+
+    .container{
+      width:min(1100px,94%);
+      margin:auto;
+      padding:4rem 1.5rem;
+      text-align:center;
+    }
+
+    h1{
+      font-family:'Great Vibes',cursive;
+      font-size:4.2rem;
+      color:var(--accent);
+      margin-bottom:.5rem;
+      text-shadow:0 8px 22px rgba(0,0,0,0.25);
+    }
+
+    p{color:#0009;margin:.3rem 0;font-weight:300}
+
+    /* CONTADOR */
+    .glass{
+      margin-top:2.6rem;
+      width:100%;
+      max-width:900px;
+      margin-inline:auto;
+      padding:1rem;
+      border-radius:10px;
+      background:rgba(255,255,255,0.20);
+      backdrop-filter:blur(8px);
+      border:1px solid rgba(255,255,255,0.4);
+    }
+
+    .digits{
+      display:flex;
+      justify-content:space-between;
+      gap:.6rem;
+    }
+
+    .unit{text-align:center;flex:1}
+    .value{
+      font-size:3.4rem;
+      font-weight:800;
+      color:#111;
+    }
+    .seconds{color:var(--accent)}
+
+    .label{
+      margin-top:.3rem;
+      letter-spacing:3px;
+      font-size:.8rem;
+      color:#444;
+    }
+
+    /* BOTÓN DE MÚSICA */
+    .music{
+      position:fixed;
+      left:50%;bottom:22px;
+      transform:translateX(-50%);
+      background:#fff;
+      border-radius:50%;
+      padding:.45rem;
+      border:1px solid #0001;
+      display:flex;
+      z-index:5;
+      backdrop-filter:blur(4px);
+      cursor:pointer;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:780px){
+      h1{font-size:3rem}
+      .value{font-size:2.3rem}
+      .digits{gap:.2rem}
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Fondo corregido -->
+  <div class="bg-img"></div>
+  <div class="back-tint"></div>
+
+  <div class="container">
+    <h1>Citlali & Marcos</h1>
+    <p>¡Nos casamos! — 25 / julio / 2026</p>
+    <p>Al terminar el temporizador aparecerá más información</p>
+
+    <div class="glass">
+      <div class="digits">
+        <div class="unit">
+          <div class="value" id="days">0</div>
+          <div class="label">DÍAS</div>
+        </div>
+        <div class="unit">
+          <div class="value" id="hours">00</div>
+          <div class="label">HORAS</div>
+        </div>
+        <div class="unit">
+          <div class="value" id="minutes">00</div>
+          <div class="label">MINUTOS</div>
+        </div>
+        <div class="unit">
+          <div class="value seconds" id="seconds">00</div>
+          <div class="label">SEGUNDOS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="bgm" src="audio.mp3" loop preload="none"></audio>
+  <button class="music" id="musicBtn">
+    ▶
+  </button>
+
+<script>
+  /* FECHA: 1 febrero 2026 */
+  const target = new Date("2026-02-01T00:00:00");
+
+  function pad(n){ return String(n).padStart(2,'0') }
+
+  function updateTimer(){
+    const now = new Date();
+    let diff = Math.max(0, target - now);
+
+    const d = Math.floor(diff/86400000); diff%=86400000;
+    const h = Math.floor(diff/3600000);  diff%=3600000;
+    const m = Math.floor(diff/60000);    diff%=60000;
+    const s = Math.floor(diff/1000);
+
+    days.textContent = d;
+    hours.textContent = pad(h);
+    minutes.textContent = pad(m);
+    seconds.textContent = pad(s);
+  }
+  setInterval(updateTimer,1000);
+  updateTimer();
+
+  /* Música */
+  const btn=document.getElementById("musicBtn");
+  const audio=document.getElementById("bgm");
+  let playing=false;
+
+  btn.onclick=()=>{
+    if(!playing){
+      audio.play();
+      playing=true;
+      btn.textContent="⏸";
+    } else {
+      audio.pause();
+      playing=false;
+      btn.textContent="▶";
+    }
+  }
+</script>
+
+</body>
+</html>
